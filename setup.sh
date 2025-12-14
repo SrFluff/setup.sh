@@ -1,20 +1,26 @@
 #!/bin/bash
+if [ -f '/usr/lib/os-release' ]; then
+  . /usr/lib/os-release
+else
+  touch $HOME'/.sh.lock'
+fi
 
 PKG_LIST='gh git python3'
-/usr/bin/clear
-echo "Install packages?(y/N)"
-read result
 
-if [[ $result == 'y' || $result == 'Y' ]]; then
-  /usr/bin/clear
-  echo -e "Distro:\n1. Debian\n2. Fedora\n3. Cancel\n"
+/usr/bin/clear
+if [ ! -f $HOME'/.sh.lock' ]; then
+  echo "Install packages?(y/N)"
   read result
-  if [ $result == "1" ]; then
-    /usr/bin/sudo /usr/bin/apt install -y $PKG_LIST
-  elif [ $result == "2" ]; then
+fi
+
+if [[ $result == 'y' && ! -f $HOME'/.sh.lock' || $result == 'Y' && ! -f $HOME'/.sh.lock' ]]; then
+  /usr/bin/clear
+  if [ $NAME == 'Fedora Linux' ]; then
+    touch $HOME'/.sh.lock'
     /usr/bin/sudo /usr/bin/dnf install -y --skip-unavailable $PKG_LIST
-  elif [ $result == "3" ]; then
-    echo "Package install canceled"
+  elif [[ $NAME == 'Debian GNU/Linux' || $NAME == 'Ubuntu' ]]; then
+    /usr/bin/sudo /usr/bin/apt install -y $PKG_LIST
+    touch $HOME'/.sh.lock'
   fi
 fi
 
@@ -35,13 +41,14 @@ if [ ! -f '/usr/bin/git' ]; then
   exit 1
 fi
 
-if [ -f '/usr/bin/git' ]; then
+if [[ -f '/usr/bin/git' && ! -f $HOME'/.git.lock' ]]; then
   echo "Enter git name"
   read name
   /usr/bin/git config --global user.name $name
   echo "Enter git e-mail"
   read email
   /usr/bin/git config --global user.email $email
+  touch $HOME'/.git.lock'
 fi
 
 if [ ! -f '/usr/bin/gh' ]; then
@@ -49,7 +56,8 @@ if [ ! -f '/usr/bin/gh' ]; then
   exit 1
 fi
 
-if [ -f '/usr/bin/gh' ]; then
+if [[ -f '/usr/bin/gh' && ! -f $HOME'/.gh.lock' ]]; then
+  touch $HOME'/.gh.lock'
   /usr/bin/gh auth login
 fi
 
