@@ -13,7 +13,7 @@ if [ ! -f $HOME'/.sh.lock' ]; then
   read result
 fi
 
-if [[ $result == 'y' && ! -f $HOME'/.sh.lock' || $result == 'Y' && ! -f $HOME'/.sh.lock' ]]; then
+if [[ $result == 'y' && ! -f "$HOME/.sh.lock" || $result == 'Y' && ! -f "$HOME/.sh.lock" ]]; then
   /usr/bin/clear
   if [[ $NAME == 'Fedora Linux' ]]; then
     touch $HOME'/.sh.lock'
